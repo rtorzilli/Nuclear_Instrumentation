@@ -1,0 +1,22 @@
+Example is a IEEE Journal (From 685 Capt Bevins Class). 
+Different packages format the document in different ways. This one is setup for the IEEE journal. 
+Press compile to create the pdf version. This needs to be done twice if the bibliography has been updated. This example uses bibitems, not bibtex. 
+
+Figures/Tables are created as objects and have to be inserted with code. 
+The example shows the entire format of the table/figure. 
+Objects are referenced with their label to keep the ordering consistent. 
+
+Objects are placed based on the item in [] in the item. Usually h! is good enough. 
+h means here: Place the figure in the text where the figure environment is written, if there is enough room left on the page
+t means top: Place it at the top of a page.
+b means bottom: Place it at the bottom of a page.
+p means page: Place it on a page containing only floats, such as figures and tables.
+! allows to ignore certain parameters of LaTeX for float placement, for example:
+	\topfraction: maximal portion of a page (or column resp., here and below), which is allowed to be used by floats at its top, default 0.7
+	\bottomfraction: maximal portion of a page, which is allowed to be used by floats at its bottom, default value 0.3
+	\textfraction: minimal portion of a page, which would be used by body text, default value 0.2
+	\floatpagefraction: minimal portion of a float page, which has to be filled by floats, default value 0.2. This avoids too much white space on float pages.
+	topnumber: maximal number of floats allowed at the top of a page, default 2
+	bottomnumber: maximal number of floats allowed at the bottom of a page, default 1
+	totalnumber: maximal number of floats allowed at whole page, default 3
+	This means, if you add !, the float will be placed if it fits onto the current page and if there aren't further waiting float objects of the same type, ignoring predefined propotions of text and floats as above. Such floats are also called bang floats.
