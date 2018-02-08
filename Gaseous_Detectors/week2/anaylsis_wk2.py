@@ -141,6 +141,7 @@ for i in range(np.amax(refined4B)):
     bot = np.sqrt(2*X4B*np.pi)
     top = np.exp((-(i-X4B)**2)/(2*X4B))
     P2.append(250*top/bot)
+ 
 # =============================================================================
 # plt.plot(X1[1:], F1)
 # =============================================================================
@@ -176,7 +177,8 @@ else:
 chiC = chiSquare(refined4C,X4C)
 print("Chis Square Value: "+ str(chiC))
 print("Reduced Chis Square Value: "+ str(chiC/(len(refined4C)-1)))
-
+print("The chi-sq would change if these were all integrated to the same #")
+         
 _,sig67=deviationSig(refined4C,X4C,.67)
 _,sig1=deviationSig(refined4C,X4C,1.0)
 _,sig16=deviationSig(refined4C,X4C,1.6)
@@ -195,9 +197,68 @@ print('1.0 Sigma had '+ str(sig1)+' deviated results IE: '+str(100*sig1/NC)+' %'
 print('1.6 Sigma had '+ str(sig16)+' deviated results IE: '+str(100*sig16/NC)+' %')
 print('2.0 Sigma had '+ str(sig2)+' deviated results IE: '+str(100*sig2/NC)+' %')
 
-    
-    
-    
+# 4D (1)
+# From first 100 second counts determine the gross,net,and background count 
+# rates and their uncertainty.  
+# Net = Gross - Background
+Gross_counts=FourD_data['Count'][0]
+Background_counts=BG_data['Count'][0]
+Net_counts1=Gross_counts-Background_counts
+Gross_counts_sigma=np.sqrt(Gross_counts)
+Background_counts_sigma=np.sqrt(Background_counts)
+Net_counts_sigma1=np.sqrt(Gross_counts_sigma**2+Background_counts_sigma**2)
+print('Part 4D(I)-----------------------------')
+# Counting Time was 100s 
+print('The count rate [counts per second] for the first 100s trial in Part 4D:')
+print('The gross count rate is: '+ str(np.round((Gross_counts/100),2))+' +/- '+str(np.round((Gross_counts_sigma/100),2)))
+print('The background count rate is: '+ str(np.round((Background_counts/100),3))+' +/- '+str(np.round((Background_counts_sigma/100),2)))
+print('The net count rate is: '+ str(np.round((Net_counts1/100),2))+' +/- '+str(np.round((Net_counts_sigma1/100),2)))
+print('The net count rate has a relative error of: '+str(100*Net_counts_sigma1/Net_counts1)+' %')
+print('Im not sure why, but the background count rate should be 0.27. not showing up')
+print('Part 4D(2)-----------------------------')
+# Using all 10 100s counts. Sum and redo. Time changes to 1000 seconds 
+Gross_counts=np.sum(FourD_data['Count'])
+Background_counts=np.sum(BG_data['Count'])
+Net_counts2=Gross_counts-Background_counts
+Gross_counts_sigma=np.sqrt(Gross_counts)
+Background_counts_sigma=np.sqrt(Background_counts)
+Net_counts_sigma2=np.sqrt(Gross_counts_sigma**2+Background_counts_sigma**2)
+# Counting Time was 100s 
+print('The count rate [counts per second] for the first 100s trial in Part 4D:')
+print('The gross count rate is: '+ str(np.round((Gross_counts/1000),2))+' +/- '+str(np.round((Gross_counts_sigma/1000),2)))
+print('The background count rate is: '+ str(np.round((Background_counts/1000),3))+' +/- '+str(np.round((Background_counts_sigma/1000),2)))
+print('The net count rate is: '+ str(np.round((Net_counts2/1000),2))+' +/- '+str(np.round((Net_counts_sigma2/1000),2)))
+print('The net count rate has a relative error of: '+str(100*Net_counts_sigma2/Net_counts2)+' %')
+print('Im not sure why, but the background count rate should be 0.248. not showing up')
+
+print('---------------------------------------------------------------------')
+print('Part 4D(3)-----------------------------')
+# Part 4D(3). In Leo(pg98), they prove that the sum of the counts treated as 
+# Individual measurements is the same as if they were taken all at once. 
+# So, im going to just repeat 4D(I) for the rest of the data. 
+for i in range(0,10):
+    print('----------')
+    print('For Trial', i+1)
+    Gross_counts=FourD_data['Count'][i]
+    Background_counts=BG_data['Count'][i]
+    Net_counts=Gross_counts-Background_counts
+    Gross_counts_sigma=np.sqrt(Gross_counts)
+    Background_counts_sigma=np.sqrt(Background_counts)
+    Net_counts_sigma=np.sqrt(Gross_counts_sigma**2+Background_counts_sigma**2)
+    # Counting Time was 100s 
+    print('The count rate [counts per second] for the first 100s trial in Part 4D:')
+    print('The gross count rate is: '+ str(np.round((Gross_counts/100),2))+' +/- '+str(np.round((Gross_counts_sigma/100),2)))
+    print('The background count rate is: '+ str(np.round((Background_counts/100),3))+' +/- '+str(np.round((Background_counts_sigma/100),2)))
+    print('The net count rate is: '+ str(np.round((Net_counts/100),2))+' +/- '+str(np.round((Net_counts_sigma/100),2)))
+    print('The net count rate has a relative error of: '+str(100*Net_counts_sigma/Net_counts)+' %')
+
+## Improvement from 10 fold increase in measurement time 
+print ('========================')
+print ('part 4D(4)')
+Improvement=(Net_counts_sigma2/Net_counts2)/(Net_counts_sigma1/Net_counts1)
+print ('Increasing the counts by a factor of 10 decreased the relative',
+       'error by a factor of ',Improvement)
+print ('The expected improvement by the square root of the number of counts formula is: ',1/np.sqrt(10))
     
     
     
